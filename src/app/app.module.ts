@@ -10,7 +10,7 @@ import { MatListModule } from '@angular/material/list';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { ProfileComponent } from './profile/profile.component';
+import { AboutComponent } from './about/about.component';
 
 import {
   MsalModule,
@@ -25,7 +25,7 @@ const isIE =
   window.navigator.userAgent.indexOf('Trident/') > -1;
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, ProfileComponent],
+  declarations: [AppComponent, HomeComponent, AboutComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -58,7 +58,7 @@ const isIE =
         interactionType: InteractionType.Redirect, // MSAL Interceptor Configuration
         protectedResourceMap: new Map([
           [
-            'https://graph.microsoft.com/v1.0/me',
+            'http://localhost:4200/about/',
             ['https://abctestorganization.b2clogin.com/user.read'],
           ],
         ]),
