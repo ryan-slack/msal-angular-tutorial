@@ -37,9 +37,11 @@ const isIE =
     MsalModule.forRoot(
       new PublicClientApplication({
         auth: {
-          clientId: '4fd0834f-684e-4d15-9055-c60f9a2a338f', // Application (client) ID from the app registration
-          authority: 'https://login.microsoftonline.com/organizations', // The Azure cloud instance and the app's sign-in audience (tenant ID, common, organizations, or consumers)
-          redirectUri: 'http://localhost:4200', // This is your redirect URI
+          clientId: '5b83aaa7-c41b-4407-918d-757cb70d2d2d', // Application (client) ID from the app registration
+          authority:
+            'https://abctestorganization.b2clogin.com/abctestorganization.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN', // The Azure cloud instance and the app's sign-in audience (tenant ID, common, organizations, or consumers)
+          knownAuthorities: ['abctestorganization.b2clogin.com'],
+          redirectUri: 'http://localhost:4200/', // This is your redirect URI
         },
         cache: {
           cacheLocation: 'localStorage',
@@ -49,13 +51,16 @@ const isIE =
       {
         interactionType: InteractionType.Redirect, // MSAL Guard Configuration
         authRequest: {
-          scopes: ['user.read'],
+          scopes: ['https://abctestorganization.b2clogin.com/user.read'],
         },
       },
       {
         interactionType: InteractionType.Redirect, // MSAL Interceptor Configuration
         protectedResourceMap: new Map([
-          ['https://graph.microsoft.com/v1.0/me', ['user.read']],
+          [
+            'https://graph.microsoft.com/v1.0/me',
+            ['https://abctestorganization.b2clogin.com/user.read'],
+          ],
         ]),
       }
     ),
