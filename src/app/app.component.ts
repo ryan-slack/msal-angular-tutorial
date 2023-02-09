@@ -5,7 +5,13 @@ import {
   MSAL_GUARD_CONFIG,
   MsalGuardConfiguration,
 } from '@azure/msal-angular';
-import { InteractionStatus, RedirectRequest } from '@azure/msal-browser';
+import {
+  EventMessage,
+  EventType,
+  InteractionStatus,
+  PopupRequest,
+  RedirectRequest,
+} from '@azure/msal-browser';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
@@ -39,6 +45,39 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.setLoginDisplay();
       });
+
+    this.broadcastService.msalSubject$
+      .pipe(
+        filter(
+          (msg: EventMessage) =>
+            msg.eventType === EventType.LOGIN_FAILURE ||
+            msg.eventType === EventType.ACQUIRE_TOKEN_FAILURE
+        ),
+        takeUntil(this._destroying$)
+      )
+      .subscribe((result: EventMessage) => {
+        // Check for forgot password error
+        // Learn more about AAD error codes at https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes
+        if (result.error && result.error.message.indexOf('AADB2C90118') > -1) {
+          let resetPasswordFlowRequest: RedirectRequest | PopupRequest = {
+            authority:
+              'https://abctestorganization.b2clogin.com/abctestorganization.onmicrosoft.com/B2C_1A_PASSWORDRESET',
+            scopes: [],
+          };
+
+          this.authService.loginRedirect(resetPasswordFlowRequest);
+        }
+
+        if (result.error && result.error.message.indexOf('AADB2C90091') > -1) {
+          let signUpSignInFlowRequest: RedirectRequest | PopupRequest = {
+            authority:
+              'https://abctestorganization.b2clogin.com/abctestorganization.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN',
+            scopes: [],
+          };
+
+          this.authService.loginRedirect(signUpSignInFlowRequest);
+        }
+      });
   }
 
   login() {
@@ -66,4 +105,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this._destroying$.next(undefined);
     this._destroying$.complete();
   }
+}
+function clearStorage() {
+  throw new Error('Function not implemented.');
 }
