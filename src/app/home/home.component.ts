@@ -6,6 +6,7 @@ import {
   InteractionStatus,
 } from '@azure/msal-browser';
 import { filter } from 'rxjs/operators';
+import { ApiServiceService } from '../services/api-service.service';
 
 @Component({
   selector: 'app-home',
@@ -14,10 +15,12 @@ import { filter } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit {
   loginDisplay = false;
+  greeting = '';
 
   constructor(
     private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService
+    private msalBroadcastService: MsalBroadcastService,
+    private apiService: ApiServiceService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +39,10 @@ export class HomeComponent implements OnInit {
       .subscribe(() => {
         this.setLoginDisplay();
       });
+
+    this.apiService
+      .getGreeting()
+      .subscribe((greeting) => (this.greeting = greeting));
   }
 
   setLoginDisplay() {
