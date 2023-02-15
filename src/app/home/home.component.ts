@@ -40,12 +40,18 @@ export class HomeComponent implements OnInit {
         this.setLoginDisplay();
       });
 
-    this.apiService
-      .getGreeting()
-      .subscribe((greeting) => (this.greeting = greeting));
+    // this.apiService
+    //   .getGreeting()
+    //   .subscribe((greeting) => (this.greeting = greeting));
+
+    this.greeting = this.sayHello();
   }
 
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
+  }
+
+  sayHello() {
+    return `Greetings, ${this.authService.instance.getAllAccounts()[0].name}!`;
   }
 }

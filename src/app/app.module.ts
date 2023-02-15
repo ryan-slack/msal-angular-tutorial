@@ -58,8 +58,10 @@ const isIE =
         interactionType: InteractionType.Redirect, // MSAL Interceptor Configuration
         protectedResourceMap: new Map([
           [
-            'http://localhost:4200/about/',
-            ['https://abctestorganization.b2clogin.com/user.read'],
+            'https://abctestorganization.onmicrosoft.com/8493b22f-67df-4e0c-b8f9-469c3c99b853',
+            [
+              'https://abctestorganization.onmicrosoft.com/8493b22f-67df-4e0c-b8f9-469c3c99b853/read_data',
+            ],
           ],
         ]),
       }
